@@ -14,32 +14,15 @@ public class ToolshopTest extends TestBase {
 
     @Test
     public void verifySignInButton() {
-        ExtentTest test = extent.createTest("verifySignInButton");
         HomePage homePage = new HomePage(getDriver());
         homePage.get();
-        try {
-            assertThat(homePage.isSignInButtonDisplayed()).isTrue();
-            test.pass("homePage.isSignInButtonDisplayed()).isTrue()");
-        }
-        catch (AssertionError ae){
-            test.fail(ae.getMessage());
-        }
-
+        assertThat(homePage.isSignInButtonDisplayed()).isTrue();
     }
 
     @Test
     public void verifySignInButton_failOnPurpose() {
-        ExtentTest test = extent.createTest("verifySignInButton_failOnPurpose");
         HomePage homePage = new HomePage(getDriver());
         homePage.get();
-
-        try {
-            assertThat(homePage.isSignInButtonDisplayed()).isFalse();
-            test.pass("homePage.isSignInButtonDisplayed()).isFalse()");
-        }
-        catch (AssertionError ae){
-            test.fail(ae.getMessage());
-        }
-
+        assertThat(homePage.isSignInButtonDisplayed()).isFalse();
     }
 }

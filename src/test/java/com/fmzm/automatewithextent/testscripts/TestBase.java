@@ -5,11 +5,18 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import io.testsmith.support.listeners.*;
 import com.fmzm.automatewithextent.utils.BrowserUtil;
 import com.fmzm.automatewithextent.utils.ScreenshotListener;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
+
+import javax.activation.FileDataSource;
+import java.io.File;
+import java.io.IOException;
 
 @Listeners(ScreenshotListener.class)
 public abstract class TestBase {
@@ -19,8 +26,6 @@ public abstract class TestBase {
     public WebDriver getDriver() {
         return driver.get();
     }
-
-    ExtentReports extent;
 
     @BeforeClass
     public void setup() {
@@ -34,29 +39,18 @@ public abstract class TestBase {
         ).decorate(originalDriver));
     }
 
-    @BeforeClass
-    public void configExtent(){
-        //extentreports , extentsparkrepoprter
-        String path = System.getProperty("user.dir") + "\\reports\\index.html";
-        ExtentSparkReporter sparkReporter = new ExtentSparkReporter(path);
-
-        sparkReporter.config().setReportName("Web Automation Results");
-        sparkReporter.config().setDocumentTitle("Test Results");
-
-        extent = new ExtentReports();
-        extent.attachReporter(sparkReporter);
-
-        extent.setSystemInfo("Tester", "Fawad Malik");
-    }
-
     @AfterClass
     public void teardown() {
         getDriver().quit();
     }
 
-    @AfterClass
-    public void teardownExtent(){
-        extent.flush();
-    }
+    public String getScreenShot(String testcaseName, WebDriver driver) throws IOException {
+        TakesScreenshot tss = (TakesScreenshot) driver;
+        File source = tss.getScreenshotAs(OutputType.FILE);
+        String filePath = System.getProperty("user.dir") + "//reports//" + testcaseName + ".png";
+        File destination = new File(filePath);
+        FileUtils.copyFile(source, destination);
 
+        return filePath;
+    }
 }
